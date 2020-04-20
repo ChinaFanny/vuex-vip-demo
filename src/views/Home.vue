@@ -49,7 +49,7 @@ export default {
         thumb: 'http://pic8.iqiyipic.com/image/20190905/5f/27/v_109343021_m_601_m4_220_124.jpg',
         title: '第二集',
         description: '大剑客现身！海贼猎人罗罗诺亚·卓洛',
-        charge: '普通会员',
+        charge: 'vip会员',
         userStatus: 1,
         vipLevel: 0
       },
@@ -73,13 +73,29 @@ export default {
       this.$router.push('./userCenter')
     },
     goVideoList (e) {
-      this.$router.push({
-        name: 'Cartoon',
-        params: {
-          id: e.id,
-          src: e.thumb
-        }
-      })
+      const res = this.checkPermission(e)
+      if (res) {
+        this.$router.push({
+          name: 'Cartoon',
+          params: {
+            id: e.id,
+            src: e.thumb,
+            title: e.title
+          }
+        })
+      } else {
+        alert('权限不足，请充值升级后观看')
+      }
+    },
+    checkPermission (e) {
+      console.log(e)
+      var userStatus = this.$store.state.userStatus
+      var vipLevel = this.$store.state.vipLevel
+      if (userStatus >= e.userStatus && vipLevel >= e.vipLevel) {
+        return true
+      } else {
+        return false
+      }
     }
   }
 }
